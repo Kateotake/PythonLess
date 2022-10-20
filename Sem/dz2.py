@@ -21,6 +21,12 @@
 #     s += i
 # print(f'Сумма цифр равна {s}')
 
+#КОММЕНТАРИЙ ОТ УЧИТЕЛЯ
+# n = input().replace('.', '').replace(',', '')
+# c = [int(i) for i in n]
+# print(sum(c))
+
+
 
 
 
