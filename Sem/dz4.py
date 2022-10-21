@@ -2,6 +2,13 @@
 # Пример:
 # - при $d = 0.001, π = 3.141.$    $10^{-1} ≤ d ≤10^{-10}$
 
+# Формула Бэйли — Боруэйна — Плаффа
+
+# n = 100
+# pi1 = sum(1/16**x*(4/(8*x + 1) - 2/(8*x + 4) - 1/(8*x + 5) - 1/(8*x + 6)) for x in range(n))
+
+# print(pi1)
+
 
 
 
@@ -46,32 +53,10 @@
 # import random
 
 # st = ''
-# k=3
+# k=6
 
 # while k > -1:
-#     a = random.randint (0,100)
-#     if k == 0:
-#         st = st + f'{a} = 0'
-#     elif k == 1:
-#         st = st + f'{a}*x + '
-#     else:
-#         st = st + f'{a}*x^{k} + '
-#     k -= 1
-    
-# print(st)
-
-# with open("hello2.txt", "w") as file:
-#     file.write(st)
-
-
-
-# import random
-
-# st = ''
-# k=3
-
-# while k > -1:
-#     a = random.randint (0,100)
+#     a = random.randint (0,2)
 #     if a != 0:
 #         if k == 0:
 #             st = st + f' + {a}'
@@ -82,6 +67,7 @@
 #     k -= 1
 # st = st + ' = 0'
 # st = st[2:]
+# st = st.replace('1*x','x')
 # print(st)
 
 # with open("hello.txt", "w") as file:
@@ -89,46 +75,108 @@
 
 
 
+# from random import randint
+# import itertools
+
+# k = 5
+
+# def get_ratios(k):
+#     ratios = [randint(0, 2) for i in range (k + 1)]
+#     while ratios[0] == 0:
+#         ratios[0] = randint(0, 2) 
+#     return ratios
+
+# def get_polynomial(k, ratios):
+#     var = ['*x^']*(k-1) + ['*x']
+#     print(var)
+#     cer = itertools.zip_longest(ratios, var, range(k, 1, -1), fillvalue = '') # получается набор символов в массивеб мы три массиве делаем чейн друг между другом 
+#     #rations-набор случайных цифр(6 шт(к+1))- [23, 3, 7, 9,45,3]
+#     # var []
+#     polynomial = [[a, b, c] for a, b, c  in cer if a !=0] # РАЗБИВАЕМ СПИСОКЮ. получается список строк
+#     # я знаю что у меня 3 зач абс и сейчас они записаны в один массив. я хочу разделить и получить массив из строк. к примеру [1, с, 2, 3, м, 3, 4, м, 4, 7, м, 8] ----- получится [1c2], [3m3], [4m4], [7m7]
+#     # и если а=0 то не делеаем это
+#     print(polynomial) 
+#     for x in polynomial:
+#         x.append(' + ') # если среди элементов есть х, то добавляем к элементу списка +
+#     print(polynomial)
+#     polynomial = list(itertools.chain(*polynomial)) # СОЕДИНЯЕМ СПИСОК
+#     polynomial[-1] = ' = 0' # добавляем в конец =0
+#     print(polynomial)
+#     polynomial = "".join(map(str, polynomial)) # ДЕЛАЕМ ИЗ СПИСКА ПРОСТО СТРОКУ
+#     print(polynomial)
+#     polynomial =polynomial.replace(' 1*x',' x') # ЗАМЕНЯЕМ 1Х НА Х
+#     print(polynomial)
+#     return polynomial
+
+
+# ratios = get_ratios(k)
+# polynom1 = get_polynomial(k, ratios)
+#print(polynom1)
+
+
+# Второй многочлен для следующей задачи:
+
+#k = 2
+
+#ratios = get_ratios(k) 
+#polynom2 = get_polynomial(k, ratios)
+#print(polynom2)
+
+
+
+
+
+
 # Даны два файла, в каждом из которых находится запись многочлена. Задача - сформировать файл, содержащий сумму многочленов.
+# # Получение данных из файла
 
-with open("hello1.txt", "r") as f1:
-    lst1 = list(f1.read())
-with open("hello2.txt", "r") as f2:
-    lst2 = list(f2.read())
+def read_file(file):
+    with open(str(file), 'r') as data:
+        st = data.read()
+    return st
 
-print(lst1)
-print(lst2)
-
-a = []
-b=[]
-c=[]
-d=[]
-
-for i in range(len(lst1)):
-    if lst1[i] == 'x':
-        if lst1[i+2] == '3':
-            a.append(lst1[i-3])
-            a.append(lst1[i-2])
-        elif lst1[i+2] == '2':
-            b.append(lst1[i-3])
-            b.append(lst1[i-2])
-        else:
-            c.append(lst1[i-3])
-            c.append(lst1[i-2])
-    if lst1[i] == '=':
-        d.append(lst1[i-3])
-        d.append(lst1[i-2])
+st1 = read_file('hello1.txt')
+print(st1)
+st2 = read_file('hello2.txt')
+print(st2)
 
 
 
+# (коэффициент, степень)
 
+def convert_pol(st):
+    st = st.replace(' = 0', '') #заменяет 0 на ничего
+    st = st.replace('*', ' ')
+    st = st.replace('^', ' ')
+    st = st.split(' + ')
+    st = [char.split() for char in st]
+    for i in st:
+        if i[0] == 'x': i.insert(0, 1) # добавь на 0ю поз -1
+        if i[-1] == 'x': i.append(1)
+        if len(i) == 1: i.append(0)
 
-a = str(a)[1:-1].replace(", ", '')
-b = str(b)[1:-1].replace(", ", "")
-c = str(c)[1:-1].replace(", ", "")
-d = str(d)[1:-1].replace(", ")
+    st = [tuple(int(n) for n in j if n != 'x') for j in st]
+    print(st)
+    return st
 
-print(a)
-print(b)
-print(c)
-print(d)
+stn1 = convert_pol(st1)
+stn2 = convert_pol(st2)
+
+# Сумма значений (коэф1 + коэф2, степень)
+lenn =0
+if len(stn1) > len(stn2):
+    lenn = len(stn1)
+else:
+    lenn = len(stn2)
+st3 = []
+
+st3.append((stn1[0][0]+stn2[0][0], stn1[0][1]))
+st3.append((stn1[1][0]+stn2[1][0], stn1[1][1]))
+for i in range(len(stn1)):
+    for j in range(len(stn2)+1):
+        if stn1[i][1] == stn2[j][1]:
+                k = stn1[i][0]+stn2[j][0]
+                m = stn1[i][1]
+                st3 = st3.append((k, m)) 
+print(st3)
+
